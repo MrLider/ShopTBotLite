@@ -155,11 +155,7 @@ def position_edit_open_finl(position_id, category_id, remover):
         ikb("📜 Изм. описание", callback_data=f"position_edit_description:{position_id}:{category_id}:{remover}"),
         ikb("📸 Изм. фото", callback_data=f"position_edit_photo:{position_id}:{category_id}:{remover}"),
     ).add(
-        ikb("🗑 Очистить", callback_data=f"position_edit_clear:{position_id}:{category_id}:{remover}"),
-    ).add(
-        ikb("📥 Товары", callback_data=f"position_edit_items:{position_id}:{category_id}:{remover}"),
         ikb("❌ Удалить", callback_data=f"position_edit_delete:{position_id}:{category_id}:{remover}"),
-    ).add(
         ikb("⬅ Вернуться ↩", callback_data=f"position_edit_swipe:{category_id}:{remover}"),
     )
 
