@@ -319,7 +319,6 @@ def get_statisctics():
            💸 Заказы за Всё время: <code>{show_profit_count_all}шт</code> - <code>{show_profit_amount_all}₽</code>
 
            <b>🔶 Прочее 🔶</b>
-           🎁 Товаров: <code>{len(get_items)}шт</code>
            📁 Позиций: <code>{len(get_positions)}шт</code>
            🗃 Категорий: <code>{len(get_categories)}шт</code>
            """)
