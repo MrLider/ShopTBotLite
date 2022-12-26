@@ -1,7 +1,7 @@
 # - *- coding: utf- 8 - *-
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from tgbot.services.api_sqlite import get_paymentx
+
 
 
 # Выбор способов пополнения

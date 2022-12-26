@@ -248,36 +248,17 @@ async def user_purchase_select(call: CallbackQuery, state: FSMContext):
     else:
         get_count = len(get_items)
 
-    if int(get_user['user_balance']) <= int(get_position['position_price']): #Изменил условие
-        if get_count == 1:
-            await state.update_data(here_cache_position_id=position_id)
-            await state.finish()
+    await state.update_data(here_cache_position_id=position_id)
+    await state.set_state("here_item_count")
 
-            with suppress(MessageCantBeDeleted):
-                await call.message.delete()
-            await call.message.answer(ded(f"""
-                                      <b>🎁 Вы действительно хотите заказать товар(ы)?</b>
-                                      ➖➖➖➖➖➖➖➖➖➖
-                                      🎁 Товар: <code>{get_position['position_name']}</code>
-                                      📦 Количество: <code>1шт</code>
-                                      💰 Сумма заказа: <code>{get_position['position_price']}₽</code>"""),
-                                      reply_markup=products_confirm_finl(position_id, 1))
-        elif get_count <= 1: #Изменил условие
-            await state.update_data(here_cache_position_id=position_id)
-            await state.set_state("here_item_count")
-
-            with suppress(MessageCantBeDeleted):
-                await call.message.delete()
-                #▶ От <code>1</code> до <code>{get_count}</code>
-            await call.message.answer(ded(f"""
-                                      <b>🎁 Введите количество товаров для заказа</b>
-                                      ➖➖➖➖➖➖➖➖➖➖
-                                      🎁 Товар: <code>{get_position['position_name']}</code> - <code>{get_position['position_price']}₽</code>
-                                      """)) #💰 Ваш баланс: <code>{get_user['user_balance']}₽</code>
-        else:
-            await call.answer("🎁 Товаров нет в наличии")
-    else:
-        await call.answer("❗ У вас недостаточно средств. Пополните баланс", True)
+    with suppress(MessageCantBeDeleted):
+        await call.message.delete()
+        # ▶ От <code>1</code> до <code>{get_count}</code>
+    await call.message.answer(ded(f"""
+                                          <b>🎁 Введите количество товаров для заказа</b>
+                                          ➖➖➖➖➖➖➖➖➖➖
+                                          🎁 Товар: <code>{get_position['position_name']}</code> - <code>{get_position['position_price']}₽</code>
+                                          """))  # 💰 Ваш баланс: <code>{get_user['user_balance']}₽</code>
 
 
 # Принятие количества товаров для покупки

@@ -10,7 +10,7 @@ from tgbot.data.loader import bot
 from tgbot.keyboards.reply_all import menu_frep
 from tgbot.services.api_session import AsyncSession
 from tgbot.services.api_sqlite import get_settingsx, update_settingsx, get_userx, get_purchasesx, get_all_positionsx, \
-    update_positionx, get_all_categoriesx, get_all_purchasesx, get_all_refillx, get_all_usersx, get_all_itemsx, \
+    update_positionx, get_all_categoriesx, get_all_purchasesx, get_all_usersx, get_all_itemsx, \
     get_itemsx, get_positionx, get_categoryx
 from tgbot.utils.const_functions import get_unix, convert_day, get_date, ded
 
@@ -242,7 +242,6 @@ def get_statisctics():
     get_categories = get_all_categoriesx()
     get_positions = get_all_positionsx()
     get_purchases = get_all_purchasesx()
-    get_refill = get_all_refillx()
     get_settings = get_settingsx()
     get_items = get_all_itemsx()
     get_users = get_all_usersx()
@@ -258,16 +257,6 @@ def get_statisctics():
             show_profit_amount_week += purchase['purchase_price']
             show_profit_count_week += purchase['purchase_count']
 
-    for refill in get_refill:
-        show_refill_amount_all += refill['refill_amount']
-        show_refill_count_all += 1
-
-        if refill['refill_unix'] - get_settings['misc_profit_day'] >= 0:
-            show_refill_amount_day += refill['refill_amount']
-            show_refill_count_day += 1
-        if refill['refill_unix'] - get_settings['misc_profit_week'] >= 0:
-            show_refill_amount_week += refill['refill_amount']
-            show_refill_count_week += 1
 
     for user in get_users:
         show_users_money += user['user_balance']

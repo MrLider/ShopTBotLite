@@ -1,7 +1,7 @@
 # - *- coding: utf- 8 - *-
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton as ikb
 
-from tgbot.services.api_sqlite import get_paymentx, get_settingsx, get_userx, update_settingsx
+from tgbot.services.api_sqlite import get_settingsx, get_userx, update_settingsx
 
 
 # Поиск профиля

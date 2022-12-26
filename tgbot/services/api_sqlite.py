@@ -101,25 +101,6 @@ def delete_userx(**kwargs):
         con.execute(sql, parameters)
         con.commit()
 
-
-# Получение платежных систем
-def get_paymentx():
-    with sqlite3.connect(PATH_DATABASE) as con:
-        con.row_factory = dict_factory
-        sql = "SELECT * FROM storage_payment"
-        return con.execute(sql).fetchone()
-
-
-# Редактирование платежных систем
-def update_paymentx(**kwargs):
-    with sqlite3.connect(PATH_DATABASE) as con:
-        con.row_factory = dict_factory
-        sql = "UPDATE storage_payment SET"
-        sql, parameters = update_format(sql, kwargs)
-        con.execute(sql, parameters)
-        con.commit()
-
-
 # Получение настроек
 def get_settingsx():
     with sqlite3.connect(PATH_DATABASE) as con:
@@ -136,46 +117,6 @@ def update_settingsx(**kwargs):
         sql, parameters = update_format(sql, kwargs)
         con.execute(sql, parameters)
         con.commit()
-
-
-# Добавление пополнения
-def add_refillx(user_id, user_login, user_name, refill_comment, refill_amount, refill_receipt,
-                refill_way, refill_date, refill_unix):
-    with sqlite3.connect(PATH_DATABASE) as con:
-        con.row_factory = dict_factory
-        con.execute("INSERT INTO storage_refill "
-                    "(user_id, user_login, user_name, refill_comment, refill_amount, refill_receipt, refill_way, refill_date, refill_unix) "
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    [user_id, user_login, user_name, refill_comment, refill_amount, refill_receipt, refill_way,
-                     refill_date, refill_unix])
-        con.commit()
-
-
-# Получение пополнения
-def get_refillx(**kwargs):
-    with sqlite3.connect(PATH_DATABASE) as con:
-        con.row_factory = dict_factory
-        sql = f"SELECT * FROM storage_refill"
-        sql, parameters = update_format_args(sql, kwargs)
-        return con.execute(sql, parameters).fetchone()
-
-
-# Получение пополнений
-def get_refillsx(**kwargs):
-    with sqlite3.connect(PATH_DATABASE) as con:
-        con.row_factory = dict_factory
-        sql = f"SELECT * FROM storage_refill"
-        sql, parameters = update_format_args(sql, kwargs)
-        return con.execute(sql, parameters).fetchall()
-
-
-# Получение всех пополнений
-def get_all_refillx():
-    with sqlite3.connect(PATH_DATABASE) as con:
-        con.row_factory = dict_factory
-        sql = "SELECT * FROM storage_refill"
-        return con.execute(sql).fetchall()
-
 
 # Добавление категории
 def add_categoryx(category_id, category_name):
@@ -468,7 +409,7 @@ def create_dbx():
 
         # Создание БД с хранением данных пользователей
         if len(con.execute("PRAGMA table_info(storage_users)").fetchall()) == 8:
-            print("DB was found(1/8)")
+            print("DB was found(1/6)")
         else:
             con.execute("CREATE TABLE storage_users("
                         "increment INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -479,30 +420,11 @@ def create_dbx():
                         "user_refill INTEGER,"
                         "user_date TIMESTAMP,"
                         "user_unix INTEGER)")
-            print("DB was not found(1/8) | Creating...")
-
-        # Создание БД с хранением данных платежных систем
-        if len(con.execute("PRAGMA table_info(storage_payment)").fetchall()) == 7:
-            print("DB was found(2/8)")
-        else:
-            con.execute("CREATE TABLE storage_payment("
-                        "qiwi_login TEXT,"
-                        "qiwi_token TEXT,"
-                        "qiwi_secret TEXT,"
-                        "qiwi_nickname TEXT,"
-                        "way_form TEXT,"
-                        "way_number TEXT,"
-                        "way_nickname TEXT)")
-
-            con.execute("INSERT INTO storage_payment("
-                        "qiwi_login, qiwi_token, qiwi_secret, qiwi_nickname, way_form, way_number, way_nickname) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                        ['None', 'None', 'None', 'None', 'False', 'False', 'False'])
-            print("DB was not found(2/8) | Creating...")
+            print("DB was not found(1/6) | Creating...")
 
         # Создание БД с хранением настроек
         if len(con.execute("PRAGMA table_info(storage_settings)").fetchall()) == 9:
-            print("DB was found(3/8)")
+            print("DB was found(2/6)")
         else:
             con.execute("CREATE TABLE storage_settings("
                         "status_work TEXT,"
@@ -520,38 +442,21 @@ def create_dbx():
                         "misc_bot, misc_update, misc_profit_day, misc_profit_week)"
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         ["True", "False", "False", "None", "None", "None", "False", get_unix(), get_unix()])
-            print("DB was not found(3/8) | Creating...")
-
-        # Создание БД с хранением пополнений пользователей
-        if len(con.execute("PRAGMA table_info(storage_refill)").fetchall()) == 10:
-            print("DB was found(4/8)")
-        else:
-            con.execute("CREATE TABLE storage_refill("
-                        "increment INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        "user_id INTEGER,"
-                        "user_login TEXT,"
-                        "user_name TEXT,"
-                        "refill_comment TEXT,"
-                        "refill_amount INTEGER,"
-                        "refill_receipt TEXT,"
-                        "refill_way TEXT,"
-                        "refill_date TIMESTAMP,"
-                        "refill_unix INTEGER)")
-            print("DB was not found(4/8) | Creating...")
+            print("DB was not found(2/6) | Creating...")
 
         # Создание БД с хранением категорий
         if len(con.execute("PRAGMA table_info(storage_category)").fetchall()) == 3:
-            print("DB was found(5/8)")
+            print("DB was found(3/6)")
         else:
             con.execute("CREATE TABLE storage_category("
                         "increment INTEGER PRIMARY KEY AUTOINCREMENT,"
                         "category_id INTEGER,"
                         "category_name TEXT)")
-            print("DB was not found(5/8) | Creating...")
+            print("DB was not found(3/6) | Creating...")
 
         # Создание БД с хранением позиций
         if len(con.execute("PRAGMA table_info(storage_position)").fetchall()) == 8:
-            print("DB was found(6/8)")
+            print("DB was found(4/6)")
         else:
             con.execute("CREATE TABLE storage_position("
                         "increment INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -562,11 +467,11 @@ def create_dbx():
                         "position_photo TEXT,"
                         "position_date TIMESTAMP,"
                         "category_id INTEGER)")
-            print("DB was not found(6/8) | Creating...")
+            print("DB was not found(4/6) | Creating...")
 
         # Создание БД с хранением товаров
         if len(con.execute("PRAGMA table_info(storage_item)").fetchall()) == 8:
-            print("DB was found(7/8)")
+            print("DB was found(5/6)")
         else:
             con.execute("CREATE TABLE storage_item("
                         "increment INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -577,11 +482,11 @@ def create_dbx():
                         "creator_id INTEGER,"
                         "creator_name TEXT,"
                         "add_date TIMESTAMP)")
-            print("DB was not found(7/8) | Creating...")
+            print("DB was not found(5/6) | Creating...")
 
         # # Создание БД с хранением покупок
         if len(con.execute("PRAGMA table_info(storage_purchases)").fetchall()) == 15:
-            print("DB was found(8/8)")
+            print("DB was found(6/6)")
         else:
             con.execute("CREATE TABLE storage_purchases("
                         "increment INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -599,6 +504,6 @@ def create_dbx():
                         "purchase_unix INTEGER,"
                         "balance_before INTEGER,"
                         "balance_after INTEGER)")
-            print("DB was not found(8/8) | Creating...")
+            print("DB was not found(6/6) | Creating...")
 
         con.commit()
