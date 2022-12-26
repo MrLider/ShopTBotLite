@@ -84,55 +84,30 @@ async def functions_receipt_get(message: Message, state: FSMContext):
         if len(find_receipt) > 1:
             find_receipt = find_receipt[1]
         else:
-            await message.answer("<b>❌ Вы не указали номер чека.</b>\n"
-                                 "🧾 Введите номер чека")
+            await message.answer("<b>❌ Вы не указали номер заказа.</b>\n"
+                                 "🧾 Введите номер заказа")
             return
 
     if find_receipt.startswith("#"): find_receipt = find_receipt[1:]
 
-    get_refill = get_refillx(refill_receipt=find_receipt)
+
     get_purchase = get_purchasex(purchase_receipt=find_receipt)
-
-    if get_refill is not None:
+    if get_purchase is not None:
         await state.finish()
-
-        if get_refill['refill_way'] == "Form":
-            way_input = "🥝 Способ пополнения: <code>По форме</code>"
-        elif get_refill['refill_way'] == "Nickname":
-            way_input = "🥝 Способ пополнения: <code>По никнейму</code>"
-        elif get_refill['refill_way'] == "Number":
-            way_input = "🥝 Способ пополнения: <code>По номеру</code>"
-        else:
-            way_input = f"🥝 Способ пополнения: <code>{get_refill['refill_way']}</code>"
-
         await message.answer(
-            f"<b>🧾 Чек: <code>#{get_refill['refill_receipt']}</code></b>\n"
-            "➖➖➖➖➖➖➖➖➖➖\n"
-            f"👤 Пользователь: <a href='tg://user?id={get_refill['user_id']}'>{get_refill['user_name']}</a> | <code>{get_refill['user_id']}</code>\n"
-            f"💰 Сумма пополнения: <code>{get_refill['refill_amount']}₽</code>\n"
-            f"{way_input}\n"
-            f"🏷 Комментарий: <code>{get_refill['refill_comment']}</code>\n"
-            f"🕰 Дата пополнения: <code>{get_refill['refill_date']}</code>"
-        )
-        return
-    elif get_purchase is not None:
-        await state.finish()
-
-        # link_items = await upload_text(message, get_purchase['purchase_item'])
-        await message.answer(
-            f"<b>🧾 Чек: <code>#{get_purchase['purchase_receipt']}</code></b>\n"
+            f"<b>🧾 Номер заказа: <code>#{get_purchase['purchase_receipt']}</code></b>\n"
             f"➖➖➖➖➖➖➖➖➖➖\n"
             f"👤 Пользователь: <a href='tg://user?id={get_purchase['user_id']}'>{get_purchase['user_name']}</a> | <code>{get_purchase['user_id']}</code>\n"
             f"🏷 Название товара: <code>{get_purchase['purchase_position_name']}</code>\n"
-            f"📦 Куплено товаров: <code>{get_purchase['purchase_count']}шт</code>\n"
+            f"📦 Заказано товаров: <code>{get_purchase['purchase_count']}шт</code>\n"
             f"💰 Цена одного товара: <code>{get_purchase['purchase_price_one']}₽</code>\n"
-            f"💸 Сумма покупки: <code>{get_purchase['purchase_price']}₽</code>\n"
-            f"🕰 Дата покупки: <code>{get_purchase['purchase_date']}</code>"
+            f"💸 Сумма заказа: <code>{get_purchase['purchase_price']}₽</code>\n"
+            f"🕰 Дата заказа: <code>{get_purchase['purchase_date']}</code>"
         )
         return
     else:
-        await message.answer("<b>❌ Чек не был найден.</b>\n"
-                             "🧾 Введите номер чека")
+        await message.answer("<b>❌ Заказ не был найден.</b>\n"
+                             "🧾 Введите номер заказа")
 
 
 ######################################## РАССЫЛКА ########################################

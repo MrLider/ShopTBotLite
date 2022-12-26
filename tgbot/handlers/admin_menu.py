@@ -4,19 +4,10 @@ from aiogram.types import Message
 
 from tgbot.data.config import BOT_VERSION, PATH_LOGS, PATH_DATABASE
 from tgbot.data.loader import dp
-from tgbot.keyboards.reply_all import payments_frep, settings_frep, functions_frep, items_frep
+from tgbot.keyboards.reply_all import settings_frep, functions_frep, items_frep
 from tgbot.utils.const_functions import get_date
 from tgbot.utils.misc.bot_filters import IsAdmin
 from tgbot.utils.misc_functions import get_statisctics
-
-
-# Платежные системы
-@dp.message_handler(IsAdmin(), text="🔑 Платежные системы", state="*")
-async def admin_payment(message: Message, state: FSMContext):
-    await state.finish()
-
-    await message.answer("<b>🔑 Настройка платежных системы.</b>", reply_markup=payments_frep())
-
 
 # Настройки бота
 @dp.message_handler(IsAdmin(), text="⚙ Настройки", state="*")

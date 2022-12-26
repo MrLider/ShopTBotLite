@@ -61,25 +61,6 @@ async def filter_buy_callback(call: CallbackQuery, state: FSMContext):
 
     await call.answer("⛔ Заказы временно отключены.", True)
 
-
-####################################################################################################
-######################################### СТАТУС ПОПОЛНЕНИЙ ########################################
-# Фильтр на доступность пополнения - сообщение
-@dp.message_handler(IsRefill(), state="here_pay_amount")
-async def filter_refill_message(message: Message, state: FSMContext):
-    await state.finish()
-
-    await message.answer("<b>⛔ Пополнение временно отключено.</b>")
-
-
-# Фильтр на доступность пополнения - колбэк
-@dp.callback_query_handler(IsRefill(), text_startswith=prohibit_refill, state="*")
-async def filter_refill_callback(call: CallbackQuery, state: FSMContext):
-    await state.finish()
-
-    await call.answer("⛔ Пополнение временно отключено.", True)
-
-
 ####################################################################################################
 ############################################## ПРОЧЕЕ ##############################################
 # Открытие главного меню

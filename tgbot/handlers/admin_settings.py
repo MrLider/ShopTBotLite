@@ -67,26 +67,6 @@ async def settings_turn_buy(call: CallbackQuery, state: FSMContext):
     await call.message.edit_reply_markup(reply_markup=turn_open_finl())
 
 
-# Включение/выключение пополнений
-@dp.callback_query_handler(IsAdmin(), text_startswith="turn_pay", state="*")
-async def settings_turn_pay(call: CallbackQuery, state: FSMContext):
-    get_status = call.data.split(":")[1]
-
-    get_user = get_userx(user_id=call.from_user.id)
-    update_settingsx(status_refill=get_status)
-
-    if get_status == "True":
-        send_text = "🟢 Включил пополнения в боте."
-    else:
-        send_text = "🔴 Выключил пополнения в боте."
-
-    await send_admins(
-        f"👤 Администратор <a href='tg://user?id={get_user['user_id']}'>{get_user['user_name']}</a>\n"
-        f"{send_text}", not_me=get_user['user_id'])
-
-    await call.message.edit_reply_markup(reply_markup=turn_open_finl())
-
-
 ######################################## ИЗМЕНЕНИЕ ДАННЫХ ########################################
 # Изменение поддержки
 @dp.callback_query_handler(IsAdmin(), text_startswith="settings_edit_support", state="*")

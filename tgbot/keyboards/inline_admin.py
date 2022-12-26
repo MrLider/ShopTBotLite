@@ -93,14 +93,11 @@ def turn_open_finl():
 
     status_buy_kb = ikb("Включены ✅", callback_data="turn_buy:False")
     status_work_kb = ikb("Включены ✅", callback_data="turn_work:False")
-    status_pay_kb = ikb("Включены ✅", callback_data="turn_pay:False")
 
     if get_settings['status_buy'] == "False":
         status_buy_kb = ikb("Выключены ❌", callback_data="turn_buy:True")
     if get_settings['status_work'] == "False":
         status_work_kb = ikb("Выключены ❌", callback_data="turn_work:True")
-    if get_settings['status_refill'] == "False":
-        status_pay_kb = ikb("Выключены ❌", callback_data="turn_pay:True")
 
     keyboard.row(
         ikb("🎁 Заказы", callback_data="..."), status_buy_kb
@@ -160,7 +157,7 @@ def position_edit_open_finl(position_id, category_id, remover):
     )
 
     return keyboard
-# ikb("🎁 Добавить товары", callback_data=f"products_add_position_open:{position_id}:{category_id}"),
+
 
 
 # Подтверждение удаления позиции
