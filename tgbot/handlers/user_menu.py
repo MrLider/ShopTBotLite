@@ -17,7 +17,7 @@ from tgbot.keyboards.inline_user import user_support_finl, products_open_finl, p
 from tgbot.keyboards.reply_all import menu_frep
 from tgbot.services.api_sqlite import *
 from tgbot.utils.const_functions import get_date, split_messages, get_unix, ded
-from tgbot.utils.misc_functions import open_profile_user, upload_text, get_faq, send_admins_order
+from tgbot.utils.misc_functions import open_profile_user, get_faq, send_admins_order
 from tgbot.services.api_session import AsyncSession
 
 # Открытие товаров
@@ -132,8 +132,6 @@ async def user_history(call: CallbackQuery, state: FSMContext):
             await call.message.delete()
 
         for purchases in last_purchases:
-            link_items = await upload_text(call, purchases['purchase_item'])
-
             await call.message.answer(ded(f"""
                                       <b>🧾 Номер заказа: <code>#{purchases['purchase_receipt']}</code></b>
                                       🎁 Товар: <code>{purchases['purchase_position_name']} | {purchases['purchase_count']}шт | {purchases['purchase_price']}₽</code>

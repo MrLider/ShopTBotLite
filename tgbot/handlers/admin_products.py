@@ -16,7 +16,7 @@ from tgbot.middlewares.throttling import rate_limit
 from tgbot.services.api_sqlite import *
 from tgbot.utils.const_functions import clear_list
 from tgbot.utils.misc.bot_filters import IsAdmin
-from tgbot.utils.misc_functions import get_position_admin, upload_text
+from tgbot.utils.misc_functions import get_position_admin
 
 
 # Создание новой категории
@@ -653,9 +653,8 @@ async def product_position_edit_items(call: CallbackQuery, state: FSMContext):
         for item in get_items: save_items.append(f"{item['item_id']} - {item['item_data']}")
         save_items = "\n".join(save_items)
 
-        save_items = await upload_text(call, save_items)
-        await call.message.answer(f"<b>📥 Все товары позиции: <code>{get_position['position_name']}</code>\n"
-                                  f"🔗 Ссылка: <a href='{save_items}'>кликабельно</a></b>",
+
+        await call.message.answer(f"<b>📥 Все товары позиции: <code>{get_position['position_name']}</code> </b>",
                                   reply_markup=close_inl)
         await call.answer()
     else:

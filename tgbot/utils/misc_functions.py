@@ -132,33 +132,6 @@ def get_faq(user_id, send_message):
 
     return send_message
 
-
-# Загрузка текста на текстовый хостинг
-async def upload_text(dp, get_text):
-    aSession: AsyncSession = dp.bot['aSession']
-    session = await aSession.get_session()
-
-    spare_pass = False
-    await asyncio.sleep(0.5)
-
-    try:
-        response = await session.post("http://pastie.org/pastes/create",
-                                      data={"language": "plaintext", "content": get_text})
-
-        get_link = response.url
-        if "create" in str(get_link): spare_pass = True
-    except:
-        spare_pass = True
-
-    if spare_pass:
-        response = await session.post("https://www.friendpaste.com",
-                                      json={"language": "text", "title": "", "snippet": get_text})
-
-        get_link = json.loads((await response.read()).decode())['url']
-
-    return get_link
-
-
 # Проверка на перенесение БД из старого бота в нового или указание токена нового бота
 async def check_bot_data():
     get_login = get_settingsx()['misc_bot']

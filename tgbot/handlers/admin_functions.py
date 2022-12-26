@@ -11,7 +11,7 @@ from tgbot.keyboards.inline_all import mail_confirm_inl
 from tgbot.services.api_sqlite import *
 from tgbot.utils.const_functions import is_number
 from tgbot.utils.misc.bot_filters import IsAdmin
-from tgbot.utils.misc_functions import open_profile_admin, upload_text
+from tgbot.utils.misc_functions import open_profile_admin
 
 
 # Рассылка
@@ -118,7 +118,7 @@ async def functions_receipt_get(message: Message, state: FSMContext):
     elif get_purchase is not None:
         await state.finish()
 
-        link_items = await upload_text(message, get_purchase['purchase_item'])
+        # link_items = await upload_text(message, get_purchase['purchase_item'])
         await message.answer(
             f"<b>🧾 Чек: <code>#{get_purchase['purchase_receipt']}</code></b>\n"
             f"➖➖➖➖➖➖➖➖➖➖\n"
@@ -227,7 +227,7 @@ async def functions_profile_purchases(call: CallbackQuery, state: FSMContext):
         await call.message.delete()
 
         for purchases in last_purchases:
-            link_items = await upload_text(call, purchases['purchase_item'])
+            # link_items = await upload_text(call, purchases['purchase_item'])
 
             await call.message.answer(f"<b>🧾 Номер заказа: <code>#{purchases['purchase_receipt']}</code></b>\n"
                                       f"🎁 Товар: <code>{purchases['purchase_position_name']} | {purchases['purchase_count']}шт | {purchases['purchase_price']}₽</code>\n"
