@@ -8,7 +8,6 @@ from aiogram.types import CallbackQuery, Message
 from aiogram.utils.exceptions import MessageCantBeDeleted
 
 from tgbot.data.config import BOT_DESCRIPTION
-from tgbot.data.config import BOT_TOKEN
 from tgbot.data.config import PRICE
 from tgbot.data.loader import dp
 from tgbot.keyboards.inline_all import profile_open_inl
@@ -207,7 +206,7 @@ async def user_purchase_position_open(call: CallbackQuery, state: FSMContext):
                💰 Стоимость: <code>{get_position['position_price']}₽</code>
                {text_description}
                """)
-    # 📦 Количество: <code>{len(get_items)}шт</code>
+
 
     if len(get_position['position_photo']) >= 5:
         with suppress(MessageCantBeDeleted):

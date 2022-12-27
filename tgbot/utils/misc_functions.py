@@ -190,7 +190,7 @@ def get_position_admin(position_id):
                   💸 Заказы за Неделю: <code>{show_profit_count_week}шт</code> - <code>{show_profit_amount_week}₽</code>
                   💸 Заказы за Всё время: <code>{show_profit_count_all}шт</code> - <code>{show_profit_amount_all}₽</code>
                   """)
-# 📦 Количество: <code>{len(get_items)}шт</code>
+
     return get_message, get_photo
 
 

@@ -27,32 +27,6 @@ def profile_search_return_finl(user_id):
 
     return keyboard
 
-# Способы пополнения
-def payment_choice_finl():
-    keyboard = InlineKeyboardMarkup()
-    get_payments = get_paymentx()
-
-    status_form_kb = ikb("✅", callback_data="change_payment:Form:False")
-    status_number_kb = ikb("✅", callback_data="change_payment:Number:False")
-    status_nickname_kb = ikb("✅", callback_data="change_payment:Nickname:False")
-
-    if get_payments['way_form'] == "False":
-        status_form_kb = ikb("❌", callback_data="change_payment:Form:True")
-    if get_payments['way_number'] == "False":
-        status_number_kb = ikb("❌", callback_data="change_payment:Number:True")
-    if get_payments['way_nickname'] == "False":
-        status_nickname_kb = ikb("❌", callback_data="change_payment:Nickname:True")
-
-    keyboard.add(
-        ikb("📋 По форме", url="https://vk.cc/bYjKGM"), status_form_kb
-    ).row(
-        ikb("📞 По номеру", url="https://vk.cc/bYjKEy"), status_number_kb
-    ).row(
-        ikb("Ⓜ По никнейму", url="https://vk.cc/c8s66X"), status_nickname_kb
-    )
-
-    return keyboard
-
 
 # Кнопки с настройками
 def settings_open_finl():
