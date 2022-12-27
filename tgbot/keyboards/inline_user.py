@@ -2,50 +2,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-
-
-# Выбор способов пополнения
-def refill_choice_finl():
-    keyboard = InlineKeyboardMarkup()
-
-    get_payments = get_paymentx()
-    active_kb = []
-
-    if get_payments['way_form'] == "True":
-        active_kb.append(InlineKeyboardButton("📋 QIWI форма", callback_data="refill_choice:Form"))
-    if get_payments['way_number'] == "True":
-        active_kb.append(InlineKeyboardButton("📞 QIWI номер", callback_data="refill_choice:Number"))
-    if get_payments['way_nickname'] == "True":
-        active_kb.append(InlineKeyboardButton("Ⓜ QIWI никнейм", callback_data="refill_choice:Nickname"))
-
-    if len(active_kb) == 3:
-        keyboard.add(active_kb[0], active_kb[1])
-        keyboard.add(active_kb[2])
-    elif len(active_kb) == 2:
-        keyboard.add(active_kb[0], active_kb[1])
-    elif len(active_kb) == 1:
-        keyboard.add(active_kb[0])
-    else:
-        keyboard = None
-
-    if len(active_kb) >= 1:
-        keyboard.add(InlineKeyboardButton("⬅ Вернуться ↩", callback_data="user_profile"))
-
-    return keyboard
-
-
-# Проверка киви платежа
-def refill_bill_finl(send_requests, get_receipt, get_way):
-    keyboard = InlineKeyboardMarkup(
-    ).add(
-        InlineKeyboardButton("🌀 Перейти к оплате", url=send_requests)
-    ).add(
-        InlineKeyboardButton("🔄 Проверить оплату", callback_data=f"Pay:{get_way}:{get_receipt}")
-    )
-
-    return keyboard
-
-
 # Кнопки при открытии самого товара
 def products_open_finl(position_id, category_id, remover):
     keyboard = InlineKeyboardMarkup(
