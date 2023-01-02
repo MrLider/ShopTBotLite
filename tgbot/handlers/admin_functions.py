@@ -134,16 +134,16 @@ async def functions_mail_get(message: Message, state: FSMContext):
 @dp.message_handler(IsAdmin(), text="0", state="here_mail_photo")
 async def mail_photo(message: Message, state: FSMContext):
     get_users = get_all_usersx()
+    await state.update_data()
     photo_id = message.photo[-1].file_id
     file_id.append(photo_id)
 
 
     cache_msg = (await state.get_data())['here_mail_text']
     await state.set_state("here_mail_confirm")
-    await message.answer_photo(photo_id)
+    await message.answer_photo(photo_id, cache_msg)
     await message.answer(
-        f"<b>📢 Отправить <code>{len(get_users)}</code> юзерам сообщение?</b>\n"
-        f"{cache_msg}",
+        f"<b>📢 Отправить <code>{len(get_users)}</code> юзерам сообщение?</b>\n",
         reply_markup=mail_confirm_inl,
         disable_web_page_preview=True
     )
