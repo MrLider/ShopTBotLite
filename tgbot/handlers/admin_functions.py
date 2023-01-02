@@ -15,6 +15,7 @@ from tgbot.utils.misc.bot_filters import IsAdmin
 from tgbot.utils.misc_functions import open_profile_admin
 from tgbot.utils.misc_functions import get_position_admin
 from aiogram import types
+file_id = []
 
 # Рассылка
 @dp.message_handler(IsAdmin(), text="📢 Рассылка", state="*")
@@ -133,27 +134,19 @@ async def functions_mail_get(message: Message, state: FSMContext):
 @dp.message_handler(IsAdmin(), text="0", state="here_mail_photo")
 async def mail_photo(message: Message, state: FSMContext):
     get_users = get_all_usersx()
-    await message.photo[-1].download('tgbot/file_0.jpg')
-    file_info = await bot.get_file(message.photo[-1].file_id)
-    info = message.photo[-1].file_id
-
-
+    photo_id = message.photo[-1].file_id
+    file_id.append(photo_id)
 
 
     cache_msg = (await state.get_data())['here_mail_text']
     await state.set_state("here_mail_confirm")
-    await message.answer_photo(info)
+    await message.answer_photo(photo_id)
     await message.answer(
         f"<b>📢 Отправить <code>{len(get_users)}</code> юзерам сообщение?</b>\n"
         f"{cache_msg}",
         reply_markup=mail_confirm_inl,
         disable_web_page_preview=True
     )
-
-
-
-
-
 
 
 # Подтверждение отправки рассылки
@@ -164,38 +157,28 @@ async def functions_mail_confirm(call: CallbackQuery, state: FSMContext):
         send_message = data['here_mail_text']
 
 
-
-
-
-
-
-
     get_users = get_all_usersx()
     await state.finish()
 
     if get_action == "yes":
         await call.message.edit_text(f"<b>📢 Рассылка началась... (0/{len(get_users)})</b>")
-        asyncio.create_task(functions_mail_make(send_message, call))
+        asyncio.create_task(functions_mail_make(send_message,  call))
     else:
         await call.message.edit_text("<b>📢 Вы отменили отправку рассылки ✅</b>")
 
 
 # Сама отправка рассылки
-async def functions_mail_make(message,  call: CallbackQuery):
+async def functions_mail_make(message, call: CallbackQuery):
     receive_users, block_users, how_users = 0, 0, 0
     get_users = get_all_usersx()
     get_time = get_unix()
-
-
-
-
+    photo = file_id[0]
 
 
     for user in get_users:
         try:
-            with open('tgbot/file_0.jpg', "rb") as photo:
-                await bot.send_photo(user['user_id'], photo, message)
-                receive_users += 1
+            await bot.send_photo(user['user_id'], photo, message)
+            receive_users += 1
         except:
             block_users += 1
 
@@ -212,6 +195,8 @@ async def functions_mail_make(message,  call: CallbackQuery):
         f"✅ Пользователей получило сообщение: <code>{receive_users}</code>\n"
         f"❌ Пользователей не получило сообщение: <code>{block_users}</code>"
     )
+    del file_id[0]
+
 
 
 ######################################## УПРАВЛЕНИЕ ПРОФИЛЕМ ########################################
