@@ -119,8 +119,11 @@ async def functions_receipt_get(message: Message, state: FSMContext):
 @dp.message_handler(IsAdmin(), state="here_mail_text")
 async def functions_mail_get(message: Message, state: FSMContext):
     await state.update_data(here_mail_text=message.text)
-
-
+    # Очистка глобальных списках перед ведением текста
+    if file_photo_id != []:
+        del file_photo_id[0]
+    if file_video_id != []:
+        del file_video_id[0]
 
     try:
         await state.set_state("here_mail_photo")
