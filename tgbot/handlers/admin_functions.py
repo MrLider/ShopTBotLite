@@ -197,8 +197,7 @@ async def functions_mail_confirm(call: CallbackQuery, state: FSMContext):
         asyncio.create_task(functions_mail_make(send_message,  call))
     else:
         await call.message.edit_text("<b>📢 Вы отменили отправку рассылки ✅</b>")
-        del file_photo_id[0]
-        del file_video_id[0]
+
 
 
 # Сама отправка рассылки
@@ -235,8 +234,7 @@ async def functions_mail_make(message, call: CallbackQuery):
         f"✅ Пользователей получило сообщение: <code>{receive_users}</code>\n"
         f"❌ Пользователей не получило сообщение: <code>{block_users}</code>"
     )
-    del file_photo_id[0]
-    del file_video_id[0]
+
 
 
 
