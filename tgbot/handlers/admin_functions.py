@@ -14,8 +14,9 @@ from tgbot.utils.const_functions import is_number
 from tgbot.utils.misc.bot_filters import IsAdmin
 from tgbot.utils.misc_functions import open_profile_admin
 from tgbot.utils.misc_functions import get_position_admin
-from aiogram import types
-file_id = []
+
+file_photo_id = []
+file_video_id = []
 
 # Рассылка
 @dp.message_handler(IsAdmin(), text="📢 Рассылка", state="*")
@@ -119,9 +120,11 @@ async def functions_receipt_get(message: Message, state: FSMContext):
 async def functions_mail_get(message: Message, state: FSMContext):
     await state.update_data(here_mail_text=message.text)
 
+
+
     try:
         await state.set_state("here_mail_photo")
-        await message.answer("<b>📁 Отправьте изображение для рассылки 📸</b>\n"
+        await message.answer("<b>📁 Отправьте изображение 📸 или видео 📹 для рассылки </b>\n"
                              "❕ Отправьте <code>0</code> чтобы пропустить.")
     except CantParseEntities:
         await message.answer("<b>❌ Ошибка синтаксиса HTML.</b>\n"
@@ -129,19 +132,45 @@ async def functions_mail_get(message: Message, state: FSMContext):
                              "❕ Вы можете использовать HTML разметку.")
 
 
-# Принятие изображения позиции для её создания
+# Принятие изображения или текста для рассылки
 @dp.message_handler(IsAdmin(), content_types="photo", state="here_mail_photo")
-@dp.message_handler(IsAdmin(), text="0", state="here_mail_photo")
+@dp.message_handler(IsAdmin(), content_types="text", state="here_mail_photo")
 async def mail_photo(message: Message, state: FSMContext):
     get_users = get_all_usersx()
     await state.update_data()
-    photo_id = message.photo[-1].file_id
-    file_id.append(photo_id)
 
+    if "text" in message:
+        photo_id = " "
+        file_video_id.append('0')
+    else:
+        photo_id = message.photo[-1].file_id
+        file_video_id.append('0')
 
+    file_photo_id.append(photo_id)
+    cache_msg = (await state.get_data())['here_mail_text']
+
+    if len(file_photo_id[0]) >= 5:
+        await message.answer_photo(photo_id, cache_msg)
+    else:
+        await message.answer(cache_msg)
+    await state.set_state("here_mail_confirm")
+    await message.answer(
+        f"<b>📢 Отправить <code>{len(get_users)}</code> юзерам сообщение?</b>\n",
+        reply_markup=mail_confirm_inl,
+        disable_web_page_preview=True
+    )
+
+# Принятие видео для рассылки
+@dp.message_handler(IsAdmin(), content_types="video", state="here_mail_photo")
+async def mail_video(message: Message, state: FSMContext):
+    get_users = get_all_usersx()
+    await state.update_data()
+    video_id = message.video.file_id
+    file_video_id.append(video_id)
     cache_msg = (await state.get_data())['here_mail_text']
     await state.set_state("here_mail_confirm")
-    await message.answer_photo(photo_id, cache_msg)
+    await message.answer_video(video_id, caption=cache_msg)
+    file_photo_id.append('0')
     await message.answer(
         f"<b>📢 Отправить <code>{len(get_users)}</code> юзерам сообщение?</b>\n",
         reply_markup=mail_confirm_inl,
@@ -165,6 +194,8 @@ async def functions_mail_confirm(call: CallbackQuery, state: FSMContext):
         asyncio.create_task(functions_mail_make(send_message,  call))
     else:
         await call.message.edit_text("<b>📢 Вы отменили отправку рассылки ✅</b>")
+        del file_photo_id[0]
+        del file_video_id[0]
 
 
 # Сама отправка рассылки
@@ -172,12 +203,18 @@ async def functions_mail_make(message, call: CallbackQuery):
     receive_users, block_users, how_users = 0, 0, 0
     get_users = get_all_usersx()
     get_time = get_unix()
-    photo = file_id[0]
-
+    photo = file_photo_id[0]
+    video = file_video_id[0]
 
     for user in get_users:
         try:
-            await bot.send_photo(user['user_id'], photo, message)
+            if len(photo) >= 5 and  len(video) <= 5:
+                await bot.send_photo(user['user_id'], photo, message)
+            elif len(video) >= 5 and len(photo) <= 5 :
+                await bot.send_video(user['user_id'], video, caption=message)
+            else:
+                await bot.send_message(user['user_id'], message)
+
             receive_users += 1
         except:
             block_users += 1
@@ -195,7 +232,8 @@ async def functions_mail_make(message, call: CallbackQuery):
         f"✅ Пользователей получило сообщение: <code>{receive_users}</code>\n"
         f"❌ Пользователей не получило сообщение: <code>{block_users}</code>"
     )
-    del file_id[0]
+    del file_photo_id[0]
+    del file_video_id[0]
 
 
 
