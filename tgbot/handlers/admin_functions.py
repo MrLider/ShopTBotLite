@@ -205,15 +205,15 @@ async def functions_mail_make(message, call: CallbackQuery):
     receive_users, block_users, how_users = 0, 0, 0
     get_users = get_all_usersx()
     get_time = get_unix()
-    photo = file_photo_id[0]
-    video = file_video_id[0]
+    photo_id = file_photo_id[0]
+    video_id = file_video_id[0]
 
     for user in get_users:
         try:
-            if len(photo) >= 5 and  len(video) <= 5:
-                await bot.send_photo(user['user_id'], photo, message)
-            elif len(video) >= 5 and len(photo) <= 5 :
-                await bot.send_video(user['user_id'], video, caption=message)
+            if len(photo_id) >= 5 and  len(video_id) <= 5:
+                await bot.send_photo(user['user_id'], photo_id, message)
+            elif len(video_id) >= 5 and len(photo_id) <= 5 :
+                await bot.send_video(user['user_id'], video_id, caption=message)
             else:
                 await bot.send_message(user['user_id'], message)
 
